@@ -29,16 +29,16 @@
 
             <% posts.map( post=> { %>
               <div class="post-preview">
-                <a href="post.html">
+                <a href="/posts/<%= post._id %>">
                   <h2 class="post-title">
                     <%= post.title %>
                   </h2>
                   <h3 class="post-subtitle">
-                    <%= post.detail %>
+                    <%= post.detail.substring(0,100)%>...
                   </h3>
                 </a>
                 <p class="post-meta">Posted by
-                  <a href="#">Start Bootstrap</a>
+                  <a href="https://www.linkedin.com/in/melihyelman/">Melih Yelman</a>
                   on <%= moment(post.dateCreated).format('lll') %>
                 </p>
               </div>
