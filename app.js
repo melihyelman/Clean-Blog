@@ -1,11 +1,23 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const ejs = require('ejs');
+const methodOverride = require('method-override');
 
-const path = require('path');
+const ejs = require('ejs');
 const moment = require('moment');
 
-const Post = require('./models/Post');
+const {
+  getAllPosts,
+  getPost,
+  addPost,
+  updatePost,
+  deletePost,
+} = require('./controllers/postControllers');
+
+const {
+  getAboutPage,
+  getAddPostPage,
+  getEditPage,
+} = require('./controllers/pageControllers');
 
 const app = express();
 
@@ -23,6 +35,11 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(
+  methodOverride('_method', {
+    methods: ['POST', 'GET'],
+  })
+);
 
 app.use((req, res, next) => {
   res.locals.moment = moment;
@@ -30,36 +47,21 @@ app.use((req, res, next) => {
 });
 
 //ROUTES
-app.get('/', async (req, res) => {
-  const posts = await Post.find({});
-  res.render('index', {
-    posts,
-  });
-});
+app.get('/', getAllPosts);
 
-app.get('/posts/:id', async (req, res) => {
-  const post = await Post.findById(req.params.id);
-  res.render('post', {
-    post,
-  });
-});
+app.get('/posts/:id', getPost);
 
-app.get('/about', (req, res) => {
-  res.render('about');
-});
+app.get('/about', getAboutPage);
 
-app.get('/add-post', (req, res) => {
-  res.render('add_post');
-});
+app.get('/add-post', getAddPostPage);
 
-app.get('/post', (req, res) => {
-  res.render('post');
-});
+app.get('/post/edit/:id', getEditPage);
 
-app.post('/posts', async (req, res) => {
-  await Post.create(req.body);
-  res.redirect('/');
-});
+app.post('/posts', addPost);
+
+app.put('/post/edit/:id', updatePost);
+
+app.delete('/post/delete/:id', deletePost);
 
 const port = 3000;
 app.listen(port, () => {
