@@ -73,7 +73,7 @@ app.put('/post/edit/:id', updatePost);
 
 app.delete('/post/delete/:id', deletePost);
 
-const port = 3000;
+const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Sunucu ${port} portunda başlatıldı..`);
 });
