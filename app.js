@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 
 const ejs = require('ejs');
+const { password } = require('./config');
 const moment = require('moment');
 
 const {
@@ -23,10 +24,19 @@ const app = express();
 
 //connect db
 
-mongoose.connect('mongodb://localhost/cleanblog-db', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose
+  .connect(
+    `mongodb+srv://melih:${password}@cluster0.7hkgf.mongodb.net/clean-blog-db?retryWrites=true&w=majority`,
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,
+    }
+  )
+  .then(() => {
+    console.log('Db connected');
+  })
+  .catch((err) => console.log(err));
 
 //TEMPLATE ENGINE
 app.set('view engine', 'ejs');
